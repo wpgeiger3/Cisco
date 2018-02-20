@@ -1,0 +1,99 @@
+//Router Setup
+
+
+en 
+conf t 
+hostname Router1						//assign host name
+no ip domain-lookup						//disable DNS lookup
+enable secret cisco						//assign cisco as encrypted privileged EXEC mode password
+line con 0 	
+exec-timeout 5 0						//Configure the console and VTY lines to log out after five minutes of inactivity
+password class							//assign class as console password and enable login
+login
+security passwords min-length 10				//require a minimum of 10 characters be used for all passwords
+service password-encryption					//encrypt all plaintext passwords
+banner motd #Warning: Unauthorized Access Prohibited!#		//create a banner
+Int G 0/0							//configure all the Gigabit Ethernet interfaces
+ip add 0.0.0.0 0.0.0.0						//configure IPv4
+ipv6 address FE80::1 link-local					//configure IPv6
+ipv6 address 2001:DB8:ACAD::1/64
+no shut
+					//configure SSH
+ip domain-name CCNA-lab.com					//set the domain name to CCNA-lab.com
+crypto key generate rsa						//generate a 1024-bit RSA key
+1024
+
+line vty 0 4							//configure the VTY lines for SSH access
+transport inout ssh
+exec-timeout 5 0						//Configure the console and VTY lines to log out after five minutes of inactivity
+login local							//use the local user profiles for authentication
+username Admin1 secret cisco					//Create a user Admin1 using the encrypted password for cisco
+login block-for 180 attempts 4 within 120			//Block anyone for three minutes who fails to log in after four attempts within a two-minute period
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+en 
+conf t 
+hostname Router1						
+no ip domain-lookup						
+enable secret cisco						
+line con 0 
+exec-timeout 5 0
+password class							
+login
+security passwords min-length 10				
+service password-encryption					
+banner motd #Warning: Unauthorized Access Prohibited!#		
+Int G 0/0
+ip add 0.0.0.0 0.0.0.0
+ipv6 address FE80::1 link-local
+ipv6 address 2001:DB8:ACAD::1/64
+no shut
+ip domain-name CCNA-lab.com
+crypto key generate rsa
+1024
+line vty 0 4
+transport inout ssh
+exec-timeout 5 0
+login local
+username Admin1 secret cisco
+login block-for 180 attempts 4 within 120
+
+*******************************************************************************************************************************************************************
+
+//switch setup
+en								
+conf t
+hostname switch1 						//assign host name
+interface Vlan1							//configure interface with the IPv4 address and subnet mask
+ip add 0.0.0.0 0.0.0.0
+no shut
+ip default-gateway 0.0.0.0					//assign default gateway
+no ip domain-lookup						//disable DNS lookup						
+enable secret cisco						//assign cisco as encrypted privileged EXEC mode password
+line con 0
+password class							//assign class as console password and enable login
+login
+exec-timeout 5 0						//Configure the console and VTY lines to log out after five minutes of inactivity
+line vty 0 4
+exec-timeout 5 0						//Configure the console and VTY lines to log out after five minutes of inactivity
+service password-encryption					//encrypt all plaintext passwords
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+en								
+conf t
+hostname switch1 						
+interface Vlan1							
+ip add 0.0.0.0 0.0.0.0
+no shut
+ip default-gateway 0.0.0.0					
+no ip domain-lookup											
+enable secret cisco						
+line con 0
+password class							
+login
+exec-timeout 5 0						
+line vty 0 4
+exec-timeout 5 0						
+service password-encryption					
