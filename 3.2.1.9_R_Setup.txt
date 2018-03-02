@@ -1,0 +1,116 @@
+config t
+hostname R1
+no ip domain-lookup
+enable secret class
+line console 0
+pasword cisco
+login 
+exit
+line vty 0 4
+pasword cisco
+login
+exit
+service password-encryption
+banner motd # Authorized Access Only!#
+interface s0/0/0
+ip add 10.1.1.1 255.255.255.252
+clock rate 128000
+no shut
+description connected to R2
+exit
+interface g0/1
+ip add 172.30.10.1 255.255.255.0
+no shut
+description connect to S1
+exit
+copy run start
+
+config t
+hostname R2
+no ip domain-lookup
+enable secret class
+line console 0
+pasword cisco
+login 
+exit
+line vty 0 4
+pasword cisco
+login
+exit
+service password-encryption
+banner motd # Authorized Access Only!#
+interface s0/0/0
+ip add 10.1.1.2 255.255.255.252
+no shut
+description connected to R1
+exit
+interface s0/0/1
+ip add 10.2.2.2 255.255.255.252
+clock rate 128000
+no shut
+description connected to R3
+interface g0/0
+ip add 209.165.201.1 255.255.255.0
+noshut
+description connected to PC-B
+exit
+
+copy run start
+
+config t
+hostname R3
+no ip domain-lookup
+enable secret class
+line console 0
+pasword cisco
+login 
+exit
+line vty 0 4
+pasword cisco
+login
+exit
+service password-encryption
+banner motd # Authorized Access Only!#
+interface s0/0/1
+ip add 10.2.2.2 255.255.255.252
+no shut
+description connected to R2
+exit
+interface g0/1
+ip add 172.30.30.1 255.255.255.0
+no shut
+description connect to S1
+exit
+copy run start
+
+
+
+R1 RIP config
+
+config t
+router rip
+version 2
+passive-interface g0/1
+network 172.30.0.0
+network 10.0.0.0
+
+
+R3 RIP config
+
+config t
+router rip
+version 2
+passive-interface g0/1
+network 172.30.0.0
+network 10.0.0.0
+
+R2 RIP config
+config t
+router rip
+version 2
+network 10.0.0.0 
+
+router rip
+no auto-summary
+end 
+clear ip route *
